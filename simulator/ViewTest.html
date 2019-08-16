@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>LAN Simulator</title>
+	<link rel="stylesheet" href="css/ui/ui-framework.css">
+    <link rel="stylesheet" href="css/sim.css">
+	<!--[if IE]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+</head>
+
+<body id="home">
+
+	<div id="sim-wrapper">
+        <div id="sim" class="ui-panel">
+            <div id="topology-panel" class="ui-panel" style="max-width: 100%;">
+                <canvas id="ui-topology" width="800px" height="500px"></canvas>
+            </div>
+            <div class="ui-panel">
+                <div id="add-panel" class="ui-panel">
+                    <div id="add-button" class="ui-button"><span class="ui-button-title">ADD DEVICE</span></div>
+                    <div id="add-menu-container" class="ui-popup-menu-container">
+                        <ul id="add-menu" class="ui-popup-menu">
+                            <li id="add-PC" class="ui-menu-item">PC</li>
+                            <li id="add-switch" class="ui-menu-item">SWITCH</li>
+                            <li id="add-router" class="ui-menu-item">ROUTER</li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="topology-info-panel" class="ui-panel">
+                    <p class="ui-text-output">
+                        This is text output describing the topology above. It changes in response to changes to the topology.
+                        Should a device be added, its configuration will be listed here. These dynamic updates are, of course, to be effected
+                        via JavaScript. At this early stage of development, no such functionality is yet present. The text here was generated
+                        by a human thru a spontaneous creative process which apparently is rather taxing to the central processing unit 
+                        present in these organisms. It likely would've been much more efficent to copy/paste some "Lorem Ipsum" text from
+                        one of the convenient placeholder text generation tools online, but to each his own.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="lib/canvasTest.js"></script>
+</body>
+</html>

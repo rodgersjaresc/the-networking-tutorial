@@ -1,0 +1,137 @@
+/*------------------------------------*\
+    RESET
+\*------------------------------------*/
+/* http://meyerweb.com/eric/tools/css/reset/ 
+    v2.0b1 | 201101 
+    NOTE:WORK IN PROGRESS
+    USE WITH CAUTION AND TEST WITH ABANDON */
+
+html,body,div,span,applet,object,iframe,
+h1,h2,h3,h4,h5,h6,p,blockquote,pre,
+a,abbr,acronym,address,big,cite,code,
+del,dfn,em,img,ins,kbd,q,s,samp,
+small,strike,strong,sub,sup,tt,var,
+b,u,i,center,
+dl,dt,dd,ol,ul,li,
+fieldset,form,label,legend,
+table,caption,tbody,tfoot,thead,tr,th,td,
+article,aside,canvas,details,figcaption,figure,
+footer,header,hgroup,menu,nav,section,summary,
+time,mark,audio,video{
+    margin:0;
+    padding:0;
+    border:0;
+    outline:0;
+    font-size:100%;
+    font:inherit;
+    vertical-align:baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+
+article,aside,details,figcaption,figure,
+footer,header,hgroup,menu,nav,section{
+    display:block;
+}
+body{
+    line-height:1;
+}
+ol,ul{
+    list-style:none;
+}
+blockquote,q{
+    quotes:none;
+}
+blockquote:before,blockquote:after,
+q:before,q:after{
+    content:’’;
+    content:none;
+}
+/* remember to define visible focus styles! 
+:focus{
+    outline:?????;
+} */
+
+/* remember to highlight inserts somehow! */
+ins{
+    text-decoration:none;
+}
+del{
+    text-decoration:line-through;
+}
+
+table{
+    border-collapse:collapse;
+    border-spacing:0;
+    
+}
+
+
+
+
+
+/*------------------------------------*\
+    $MAIN
+\*------------------------------------*/
+.ui-panel {
+    box-sizing: border-box;
+    vertical-align: top;
+    padding: .2em;
+    margin: .3em;
+    border: 1px solid black;
+}
+.ui-button {
+    width: 100%;
+    color: white;
+    font-family: sans-serif;
+    text-align: center;
+    background-color: #555;
+}
+.ui-button:hover {
+    cursor: pointer;
+    color: skyblue;
+}
+.ui-button-title:active{
+    color: blue;
+}
+.ui-popup-menu-container {
+    display: none;
+    box-sizing: border-box;
+    margin-top: .3em;
+    color: white;
+    font-family: sans-serif;
+    text-align: center;
+    background-color: #777999;
+}
+.ui-popup-menu li{
+    box-sizing: border-box;
+    padding-top: .3em;
+    padding-bottom: .3em;
+    border-bottom: 1px solid white;
+}
+.ui-popup-menu li:last-of-type{
+    border-bottom: none;
+}
+.ui-popup-menu li:hover{
+    cursor: pointer;
+    color: skyblue;
+}
+.ui-popup-menu li:active {
+    color: blue;
+}
+.ui-text-output {
+    font-family: monospace;
+    line-height: 1.5;
+}
+
+
+/*-------------------------------------------
+    $EFFECTS
+   
+-------------------------------------------*/
+
+.show {
+    display: block;
+}
+
+
