@@ -1,13 +1,14 @@
+//GLOBALS FOR FUNCTIONS
+
+var devices = [], isDragging = false, needsRedraw = false, selected = null,
+    deviceCount = 0, PCCount = 0, switchCount = 0, routerCount = 0;
+
+
 var addButton = document.getElementById("add-button");
 addButton.addEventListener("click", function(){showMenu("add-menu-container");});
 
 var removeButton = document.getElementById("remove-button");
 removeButton.addEventListener("click", removeDevice);
-
-
-function showMenu(id){
-    document.getElementById(id).classList.toggle('show');
-}
 
 var pcButton = document.getElementById("add-PC"), switchButton = document.getElementById("add-switch"),
     routerButton = document.getElementById("add-router");
@@ -23,9 +24,44 @@ canvas.addEventListener("mousedown", function(e){ selectDevice(e); });
 canvas.addEventListener("mousemove", function(e){ dragDevice(e); });
 canvas.addEventListener("mouseup", endDrag);
 
-//GLOBALS FOR FUNCTIONS
-var devices = [], isDragging = false, needsRedraw = false, selected = null,
-    deviceCount = 0, PCCount = 0, switchCount = 0, routerCount = 0;
+/*----------OBJECT DEFINITIONS----------*/
+/*
+*
+*
+*
+*
+*/
+
+function Device(icon, name){
+    this.name = name;
+    this.icon = icon;
+    this.x = 0;
+    this.y = 0;
+    this.width = icon.width;
+    this.height = icon.height;
+    this.connectedTo = null;
+}
+
+Device.prototype.contains = function(mx, my){
+    //console.log(mx);
+    //console.log(my);
+    return (this.x <= mx) && (this.x + this.width >= mx) &&
+       (this.y <= my) && (this.y + this.height >= my);
+}
+
+
+/*----------FUNCTION DEFINITIONS----------*/
+/*
+*
+*
+*
+*
+*/
+
+function showMenu(id){
+    document.getElementById(id).classList.toggle('show');
+}
+
 
 function addDevice(event, name){
     var icon = new Image();
@@ -136,21 +172,6 @@ function redraw(){
     }
 }
 
-function Device(icon, name){
-    this.name = name;
-    this.icon = icon;
-    this.x = 0;
-    this.y = 0;
-    this.width = icon.width;
-    this.height = icon.height;
-}
-
-Device.prototype.contains = function(mx, my){
-    //console.log(mx);
-    //console.log(my);
-    return (this.x <= mx) && (this.x + this.width >= mx) &&
-       (this.y <= my) && (this.y + this.height >= my);
-}
 
 function highlight(){
     redraw();

@@ -9,9 +9,7 @@
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 </head>
-
 <body id="home">
-
 	<div id="sim-wrapper">
         <div id="sim" class="ui-panel">
             <div id="topology-panel" class="ui-panel" style="max-width: 100%;">
@@ -19,10 +17,12 @@
             </div>
             <div class="ui-panel">
                 <div id="add-panel" class="ui-panel">
-                    <div id="add-button" class="ui-button" onclick="fui_menu_toggle()"><span class="ui-button-title">ADD DEVICE</span></div>
+                    <div id="add-button" class="ui-button"><span class="ui-button-title">ADD DEVICE</span></div>
+                    <div id="remove-button" class="ui-button"><span class="ui-button-title">REMOVE DEVICE</span></div>
+                    <div id="connection-button" class="ui-button"><span class="ui-button-title">ADD CONNECTION</span></div>
                     <div id="add-menu-container" class="ui-popup-menu-container">
                         <ul id="add-menu" class="ui-popup-menu">
-                            <li id="add-PC" class="ui-menu-item" onclick="addPC()">PC</li>
+                            <li id="add-PC" class="ui-menu-item">PC</li>
                             <li id="add-switch" class="ui-menu-item">SWITCH</li>
                             <li id="add-router" class="ui-menu-item">ROUTER</li>
                         </ul>
@@ -41,7 +41,6 @@
             </div>
         </div>
     </div>
-    <script src="lib/ui-button.js"></script>
-    <script src="lib/ui-topology.js"></script>
+    <script src="lib/sim.js"></script>
 </body>
 </html>
