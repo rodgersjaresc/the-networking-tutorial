@@ -67,7 +67,7 @@ function addDevice(event, name){
     var icon = new Image();
     
     if(name == "PC"){
-        icon.src = 'Icons/PC.png';
+        icon.src = 'icons/pc.png';
         icon.onload = function(){
             PCCount++;
             deviceCount++;
@@ -75,7 +75,7 @@ function addDevice(event, name){
             redraw();
         }
     }else if(name == "Switch"){
-        icon.src = 'Icons/Switch.png';
+        icon.src = 'icons/switch.png';
         icon.onload = function(){
             switchCount++;
             deviceCount++;
@@ -83,7 +83,7 @@ function addDevice(event, name){
             redraw(); 
         }
     }else if(name == "Router"){
-        icon.src = 'Icons/Router.png';
+        icon.src = 'icons/router.png';
         icon.onload = function(){
             routerCount++;
             deviceCount++;
