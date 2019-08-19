@@ -1,8 +1,12 @@
 var addButton = document.getElementById("add-button");
-addButton.addEventListener("click", showMenu);
+addButton.addEventListener("click", function(){showMenu("add-menu-container");});
 
-function showMenu(){
-    document.getElementById('add-menu-container').classList.toggle('show');
+var removeButton = document.getElementById("remove-button");
+removeButton.addEventListener("click", removeDevice);
+
+
+function showMenu(id){
+    document.getElementById(id).classList.toggle('show');
 }
 
 var pcButton = document.getElementById("add-PC"), switchButton = document.getElementById("add-switch"),
@@ -53,6 +57,33 @@ function addDevice(event, name){
     }
 }
 
+function removeDevice() {
+    if(selected != null){
+        if(devices.length > 0){
+            var choice = selected.name;
+
+            for(var i = 0; i < devices.length; i++){
+                if(selected.name == devices[i].name){
+                    //console.log("removing");
+                    if(selected.name.startsWith("PC")){
+                        PCCount--;
+                    }else if(selected.name.startsWith("Switch")){
+                        switchCount--;
+                    }else if(selected.name.startsWith("Router")){
+                        routerCount--;
+                    }
+                    devices.splice(i, 1);
+                    deviceCount--;
+                    redraw();
+                }
+            }
+        }else {
+            return;
+        }
+    }
+        
+}
+
 function convertCoordinates(canvas, x, y){
     var container = canvas.getBoundingClientRect();
     
@@ -65,13 +96,16 @@ function selectDevice(e){
     var location = convertCoordinates(canvas, e.clientX, e.clientY);
     var x = null;
     for(x of devices){
-        console.log("inloop");
-        console.log(x);
+        //console.log("inloop");
+        //console.log(x);
         if(x.contains(location.x, location.y)){
             selected = x;
             isDragging = true;
-            console.log("in it...")
+            //console.log("in it...")
+            highlight();
             return;
+        }else {
+            deselect();
         }
     }
 }
@@ -79,28 +113,27 @@ function selectDevice(e){
 function dragDevice(e){
     if(isDragging){
         var location = convertCoordinates(canvas, e.clientX, e.clientY);
-        console.log("mousdwn.");
+        //console.log("mousdwn.");
         selected.x = location.x;
         selected.y = location.y;
-        console.log("drag start...");
+        //console.log("drag start...");
         redraw();
+        highlight();
     }
-    
 }
 
 function endDrag(){
     isDragging = false;
-    console.log("drag over...");
+    //console.log("drag over...");
 }
 
 function redraw(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     var x = null;
     for(x of devices){
-            console.log("redraw..")
-            ctx.drawImage(x.icon, x.x, x.y);
+        //console.log("redraw..")
+        ctx.drawImage(x.icon, x.x, x.y, (x.width/3),(x.height/3));
     }
-    needsRedraw = false;
 }
 
 function Device(icon, name){
@@ -110,11 +143,25 @@ function Device(icon, name){
     this.y = 0;
     this.width = icon.width;
     this.height = icon.height;
-    }
+}
 
 Device.prototype.contains = function(mx, my){
-        console.log(mx);
-        console.log(my);
-        return (this.x <= mx) && (this.x + this.width >= mx) &&
-           (this.y <= my) && (this.y + this.height >= my);
+    //console.log(mx);
+    //console.log(my);
+    return (this.x <= mx) && (this.x + this.width >= mx) &&
+       (this.y <= my) && (this.y + this.height >= my);
+}
+
+function highlight(){
+    redraw();
+    if(selected != null){
+        ctx.strokeRect(selected.x, selected.y, (selected.width/3), (selected.height/3))
+    }else {
+        return;
+    }
+}
+
+function deselect(){
+    selected = null;
+    redraw();
 }

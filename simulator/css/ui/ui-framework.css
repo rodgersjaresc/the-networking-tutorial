@@ -82,6 +82,8 @@ table{
 }
 .ui-button {
     width: 100%;
+    padding-top: .3em;
+    padding-bottom: .3em;
     color: white;
     font-family: sans-serif;
     text-align: center;
@@ -93,6 +95,9 @@ table{
 }
 .ui-button-title:active{
     color: blue;
+}
+#remove-button {
+    background-color: red;
 }
 .ui-popup-menu-container {
     display: none;
