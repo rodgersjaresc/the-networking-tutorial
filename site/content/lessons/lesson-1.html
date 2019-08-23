@@ -4,6 +4,8 @@
 	<meta charset="utf-8">
 	<title>The Networking Tutorial</title>
 	<link rel="stylesheet" href="css/lesson-1.css">
+    <link rel="stylesheet" href="simulator/css/sim.css">
+    <link rel="stylesheet" href="simulator/css/ui/ui-framework.css">
 	<!--[if IE]>
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
@@ -22,19 +24,46 @@
                         <h1 class="content-title">Introduction to Local Area Networks (LANs)</h1>
                     </div>
                     <div id="sim-container">
-                        <canvas id="simulator" width="500" height="300"></canvas>
+                        <div id="sim" class="ui-panel">
+                            <div id="topology-panel" class="ui-panel" style="max-width: 100%;">
+                                <canvas id="ui-topology" width="800px" height="500px"></canvas>
+                            </div>
+                            <div class="ui-panel">
+                                <div id="add-panel" class="ui-panel">
+                                    <div id="add-button" class="ui-button"><span class="ui-button-title">ADD DEVICE</span></div>
+                                    <div id="remove-button" class="ui-button"><span class="ui-button-title">REMOVE DEVICE</span></div>
+                                    <div id="connection-button" class="ui-button"><span class="ui-button-title">ADD CONNECTION</span></div>
+                                    <div id="add-menu-container" class="ui-popup-menu-container">
+                                        <ul id="add-menu" class="ui-popup-menu">
+                                            <li id="add-PC" class="ui-menu-item">PC</li>
+                                            <li id="add-switch" class="ui-menu-item">SWITCH</li>
+                                            <li id="add-router" class="ui-menu-item">ROUTER</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div id="topology-info-panel" class="ui-panel">
+                                    <p class="ui-text-output">
+                                        This is text output describing the topology above. It changes in response to changes to the topology.
+                                        Should a device be added, its configuration will be listed here. These dynamic updates are, of course, to be effected
+                                        via JavaScript. At this early stage of development, no such functionality is yet present. The text here was generated
+                                        by a human thru a spontaneous creative process which apparently is rather taxing to the central processing unit 
+                                        present in these organisms. It likely would've been much more efficent to copy/paste some "Lorem Ipsum" text from
+                                        one of the convenient placeholder text generation tools online, but to each his own.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="content-text-box">
                         <p class="content-text">
-                            Below is an interactive simulation of a local area network or LAN. The term  LAN generally refers to a collection of computers contained 
+                            Above is an interactive simulation of a local area network or LAN. The term  LAN generally refers to a collection of computers contained 
                             within a single geographic location such as a building or room. Although the term implies physical proximity, this is not always the case.
                             LANs are only really logical collections of devices that share common configurations.
                         </p>
                     </div>
-                <div class="content-sub-header">
-                        <h1 class="content-sub-title">Introduction to Local Area Networks (LANs)</h1>
-                    </div>
-                    
+                    <div class="content-sub-header">
+                        <h1 class="content-sub-title">LAN Basics</h1>
+                    </div>      
                     <div class="content-text-box">
                         <p class="content-text">
                             
@@ -45,16 +74,13 @@
                             <span>Next</span>
                         </a>
                     </div>
-                    
                     </div>
                 </div>
                 <div id="footer">
-                    <p>Copyright &copy;2019</p>
+                    <p>Copyright &copy;2019 The CS Specialists</p>
                 </div>
             </div>
-        </div>
-        
-    </div>
-
+        </div> 
+    <script src="simulator/scripts/sim.js"></script>
 </body>
 </html>

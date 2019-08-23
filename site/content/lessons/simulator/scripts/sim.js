@@ -1,8 +1,14 @@
-//GLOBALS FOR FUNCTIONS
+/*-----------GLOBAL VARIABLE DEFINITIONS-----------
+*
+*
+*
+*
+*
+*/
 
-var devices = [], isDragging = false, needsRedraw = false, selected = null,
-    deviceCount = 0, PCCount = 0, switchCount = 0, routerCount = 0;
-
+var devices = [], isDragging = false, selected = null,
+    deviceCount = 0, PCCount = 0, switchCount = 0, routerCount = 0,
+    isConnecting = false;
 
 var addButton = document.getElementById("add-button");
 addButton.addEventListener("click", function(){showMenu("add-menu-container");});
@@ -11,21 +17,25 @@ var removeButton = document.getElementById("remove-button");
 removeButton.addEventListener("click", removeDevice);
 
 var pcButton = document.getElementById("add-PC"), switchButton = document.getElementById("add-switch"),
-    routerButton = document.getElementById("add-router");
+    routerButton = document.getElementById("add-router"), connectionButton = document.getElementById("connection-button");
 
 pcButton.addEventListener("click", function(e){ addDevice(e, "PC"); });
 switchButton.addEventListener("click", function(e){ addDevice(e, "Switch"); });
 routerButton.addEventListener("click", function(e){ addDevice(e, "Router"); });
+connectionButton.addEventListener("click", function(){ addConnection(selected); });
 
 var canvas = document.getElementById("ui-topology");
 var ctx = canvas.getContext('2d');
 
 canvas.addEventListener("mousedown", function(e){ selectDevice(e); });
 canvas.addEventListener("mousemove", function(e){ dragDevice(e); });
+//canvas.addEventListener("mousemove", function(e){ createConnection(selected); });
 canvas.addEventListener("mouseup", endDrag);
 
-/*----------OBJECT DEFINITIONS----------*/
-/*
+//------------GLOBAL VARIABLE DEFINITIONS-----------
+
+
+/*----------OBJECT DEFINITIONS----------
 *
 *
 *
@@ -37,37 +47,53 @@ function Device(icon, name){
     this.icon = icon;
     this.x = 0;
     this.y = 0;
-    this.width = icon.width;
-    this.height = icon.height;
+    this.width = icon.width/3;
+    this.height = icon.height/3;
     this.connectedTo = null;
 }
 
 Device.prototype.contains = function(mx, my){
-    //console.log(mx);
-    //console.log(my);
+    console.log(mx);
+    console.log(my);
     return (this.x <= mx) && (this.x + this.width >= mx) &&
        (this.y <= my) && (this.y + this.height >= my);
 }
 
+//----------END OBJECT DEFINITIONS----------
 
-/*----------FUNCTION DEFINITIONS----------*/
+
+/*----------UTILITY FUNCTIONS----------
+*
+*
+*
+*
+*
+*/
+function convertCoordinates(canvas, x, y){
+    var container = canvas.getBoundingClientRect();
+    
+    return {x: x - container.left * (canvas.width / container.width),
+            y: y - container.top  * (canvas.height / container.height)
+           };
+}
+
+function showMenu(id){
+    document.getElementById(id).classList.toggle('show');
+}
+//----------END UTILITY FUNCTIONS----------
+
+/*----------FUNCTION DEFINITIONS----------
 /*
 *
 *
 *
 *
 */
-
-function showMenu(id){
-    document.getElementById(id).classList.toggle('show');
-}
-
-
 function addDevice(event, name){
     var icon = new Image();
     
     if(name == "PC"){
-        icon.src = 'icons/pc.png';
+        icon.src = 'simulator/icons/pc.png';
         icon.onload = function(){
             PCCount++;
             deviceCount++;
@@ -75,7 +101,7 @@ function addDevice(event, name){
             redraw();
         }
     }else if(name == "Switch"){
-        icon.src = 'icons/switch.png';
+        icon.src = 'simulator/icons/switch.png';
         icon.onload = function(){
             switchCount++;
             deviceCount++;
@@ -83,7 +109,7 @@ function addDevice(event, name){
             redraw(); 
         }
     }else if(name == "Router"){
-        icon.src = 'icons/router.png';
+        icon.src = 'simulator/icons/router.png';
         icon.onload = function(){
             routerCount++;
             deviceCount++;
@@ -118,14 +144,6 @@ function removeDevice() {
         }
     }
         
-}
-
-function convertCoordinates(canvas, x, y){
-    var container = canvas.getBoundingClientRect();
-    
-    return {x: x - container.left * (canvas.width / container.width),
-            y: y - container.top  * (canvas.height / container.width)
-           };
 }
 
 function selectDevice(e){
@@ -168,7 +186,7 @@ function redraw(){
     var x = null;
     for(x of devices){
         //console.log("redraw..")
-        ctx.drawImage(x.icon, x.x, x.y, (x.width/3),(x.height/3));
+        ctx.drawImage(x.icon, x.x, x.y, (x.width),(x.height));
     }
 }
 
@@ -176,7 +194,7 @@ function redraw(){
 function highlight(){
     redraw();
     if(selected != null){
-        ctx.strokeRect(selected.x, selected.y, (selected.width/3), (selected.height/3))
+        ctx.strokeRect(selected.x, selected.y, (selected.width), (selected.height))
     }else {
         return;
     }
@@ -185,4 +203,14 @@ function highlight(){
 function deselect(){
     selected = null;
     redraw();
+}
+
+function addConnection(sel){
+    if(isConnecting){
+        document.body.style.cursor = "crosshair";
+        /*function(){
+            
+        }*/
+    }
+    
 }
