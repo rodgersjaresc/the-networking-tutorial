@@ -6,7 +6,7 @@
 *
 */
 
-var devices = [], isDragging = false, selected = null,
+var devices = [], connections = [], isDragging = false, selected = null,
     deviceCount = 0, PCCount = 0, switchCount = 0, routerCount = 0,
     isConnecting = false;
 
@@ -29,7 +29,7 @@ var ctx = canvas.getContext('2d');
 
 canvas.addEventListener("mousedown", function(e){ selectDevice(e); });
 canvas.addEventListener("mousemove", function(e){ dragDevice(e); });
-//canvas.addEventListener("mousemove", function(e){ createConnection(selected); });
+canvas.addEventListener("mousemove", function(e){ if(isConnecting) drawConnection(e); });
 canvas.addEventListener("mouseup", endDrag);
 
 //------------GLOBAL VARIABLE DEFINITIONS-----------
@@ -58,6 +58,17 @@ Device.prototype.contains = function(mx, my){
     return (this.x <= mx) && (this.x + this.width >= mx) &&
        (this.y <= my) && (this.y + this.height >= my);
 }
+
+function Connection(){
+    this.head = {x:0, y:0};
+    this.tail = {x:0, y:0};
+    
+}
+
+var pathStart = {
+    x: 0,
+    y: 0
+};
 
 //----------END OBJECT DEFINITIONS----------
 
@@ -153,11 +164,16 @@ function selectDevice(e){
         //console.log("inloop");
         //console.log(x);
         if(x.contains(location.x, location.y)){
-            selected = x;
-            isDragging = true;
-            //console.log("in it...")
-            highlight();
-            return;
+            if(isConnecting){
+                finishConnection(x);
+            }else{
+                selected = x;
+                isDragging = true;
+                //console.log("in it...")
+                highlight();
+                return;
+            }
+            
         }else {
             deselect();
         }
@@ -206,11 +222,35 @@ function deselect(){
 }
 
 function addConnection(sel){
-    if(isConnecting){
-        document.body.style.cursor = "crosshair";
-        /*function(){
-            
-        }*/
+    if(!isConnecting && sel != null){
+        isConnecting = true;
+    }else {
+        document.getElementById("ui-topology").style.cursor = "default";
+        isConnecting = false;
+        return;
     }
+    
+    document.getElementById("ui-topology").style.cursor = "crosshair";
+    var conn = new Connection();
+    connections.push(conn);
+    setPathStart(conn);
+}
+
+function setPathStart(conn){
+    conn.head.x = ((selected.x) + (selected.width / 2));
+    conn.head.y = ((selected.y) + (selected.height / 2));
+}
+
+function drawConnection(e){
+    var location = convertCoordinates(canvas, e.clientX, e.clientY);
+    ctx.beginPath();
+    ctx.moveTo(connections[connections.length - 1].head.x, connections[connections.length - 1].head.y);
+    ctx.lineTo(location.x, location.y);
+    //ctx.stroke();
+    redraw();
+    ctx.stroke();
+}
+
+function finishConnection(sel){
     
 }
