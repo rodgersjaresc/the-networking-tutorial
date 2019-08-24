@@ -28,6 +28,7 @@ var canvas = document.getElementById("ui-topology");
 var ctx = canvas.getContext('2d');
 
 canvas.addEventListener("mousedown", function(e){ selectDevice(e); });
+canvas.addEventListener("click", function(e){ if(isConnecting) finishConnection(e); });
 canvas.addEventListener("mousemove", function(e){ dragDevice(e); });
 canvas.addEventListener("mousemove", function(e){ if(isConnecting) drawConnection(e); });
 canvas.addEventListener("mouseup", endDrag);
@@ -251,6 +252,21 @@ function drawConnection(e){
     ctx.stroke();
 }
 
-function finishConnection(sel){
-    
+function finishConnection(e){
+    var location = convertCoordinates(canvas, e.clientX, e.clientY);
+    var x = null;
+    for(x of devices){
+        //console.log("inloop");
+        //console.log(x);
+        if(x.contains(location.x, location.y)){
+            connections[connections.length - 1].tail.x = location.x;
+            connections[connections.length - 1].tail.y = location.y;
+            isConnecting = false;
+            
+        }else {
+            isConnecting = false;
+            document.getElementById("ui-topology").style.cursor = "default";
+            redraw();
+        }
+    }
 }
