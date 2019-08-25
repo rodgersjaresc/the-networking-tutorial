@@ -28,8 +28,8 @@ var canvas = document.getElementById("ui-topology");
 var ctx = canvas.getContext('2d');
 
 canvas.addEventListener("mousedown", function(e){ selectDevice(e); });
-canvas.addEventListener("click", function(e){ if(isConnecting) finishConnection(e); });
-canvas.addEventListener("mousemove", function(e){ dragDevice(e); });
+//canvas.addEventListener("click", function(e){ if(isConnecting) finishConnection(e); });
+canvas.addEventListener("mousemove", function(e){ if(isDragging) dragDevice(e); });
 canvas.addEventListener("mousemove", function(e){ if(isConnecting) drawConnection(e); });
 canvas.addEventListener("mouseup", endDrag);
 
@@ -50,11 +50,13 @@ function Device(icon, name){
     this.y = 0;
     this.width = icon.width/3;
     this.height = icon.height/3;
-    this.connectedTo = null;
+    this.connectedTo = [];
 }
 
 Device.prototype.contains = function(mx, my){
+    if(isConnecting)
     console.log(mx);
+    if(isConnecting)
     console.log(my);
     return (this.x <= mx) && (this.x + this.width >= mx) &&
        (this.y <= my) && (this.y + this.height >= my);
@@ -63,13 +65,9 @@ Device.prototype.contains = function(mx, my){
 function Connection(){
     this.head = {x:0, y:0};
     this.tail = {x:0, y:0};
-    
+    this.valid = false;
 }
 
-var pathStart = {
-    x: 0,
-    y: 0
-};
 
 //----------END OBJECT DEFINITIONS----------
 
@@ -166,7 +164,8 @@ function selectDevice(e){
         //console.log(x);
         if(x.contains(location.x, location.y)){
             if(isConnecting){
-                finishConnection(x);
+                finishConnection(e);
+                return;
             }else{
                 selected = x;
                 isDragging = true;
@@ -174,11 +173,9 @@ function selectDevice(e){
                 highlight();
                 return;
             }
-            
-        }else {
-            deselect();
         }
     }
+    deselect();
 }
 
 function dragDevice(e){
@@ -201,10 +198,22 @@ function endDrag(){
 function redraw(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     var x = null;
-    for(x of devices){
-        //console.log("redraw..")
-        ctx.drawImage(x.icon, x.x, x.y, (x.width),(x.height));
+    var y = null;
+    
+    if(connections.length){
+        for(y of connections){
+            if(y.valid){
+                redrawConnection(y);
+            }
+        }
     }
+    
+    if(devices.length){
+        for(x of devices){
+        //console.log("redraw..")
+            ctx.drawImage(x.icon, x.x, x.y, (x.width),(x.height));
+        }
+    }   
 }
 
 
@@ -219,6 +228,10 @@ function highlight(){
 
 function deselect(){
     selected = null;
+    if(isConnecting){
+        isConnecting = false;
+        document.getElementById("ui-topology").style.cursor = "default";
+    }
     redraw();
 }
 
@@ -244,11 +257,19 @@ function setPathStart(conn){
 
 function drawConnection(e){
     var location = convertCoordinates(canvas, e.clientX, e.clientY);
+    redraw();
+    highlight();
     ctx.beginPath();
     ctx.moveTo(connections[connections.length - 1].head.x, connections[connections.length - 1].head.y);
     ctx.lineTo(location.x, location.y);
     //ctx.stroke();
-    redraw();
+    ctx.stroke();
+}
+
+function redrawConnection(conn){
+    ctx.beginPath();
+    ctx.moveTo(conn.head.x, conn.head.y);
+    ctx.lineTo(conn.tail.x, conn.tail.y);
     ctx.stroke();
 }
 
@@ -258,15 +279,22 @@ function finishConnection(e){
     for(x of devices){
         //console.log("inloop");
         //console.log(x);
-        if(x.contains(location.x, location.y)){
+        if(x.contains(location.x, location.y) && (x != selected)){
             connections[connections.length - 1].tail.x = location.x;
             connections[connections.length - 1].tail.y = location.y;
-            isConnecting = false;
-            
-        }else {
+            connections[connections.length - 1].valid = true;
+            x.connectedTo.push(selected);
+            selected.connectedTo.push(x);
             isConnecting = false;
             document.getElementById("ui-topology").style.cursor = "default";
             redraw();
+            return;
         }
     }
+    
+    console.log('elseing...');
+    isConnecting = false;
+    connections.pop();
+    document.getElementById("ui-topology").style.cursor = "default";
+    redraw();
 }
