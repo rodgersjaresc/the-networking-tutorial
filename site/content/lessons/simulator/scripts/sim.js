@@ -22,7 +22,7 @@ var pcButton = document.getElementById("add-PC"), switchButton = document.getEle
 pcButton.addEventListener("click", function(e){ addDevice(e, "PC"); });
 switchButton.addEventListener("click", function(e){ addDevice(e, "Switch"); });
 routerButton.addEventListener("click", function(e){ addDevice(e, "Router"); });
-connectionButton.addEventListener("click", function(){ addConnection(selected); });
+connectionButton.addEventListener("click", function(){ addConnection(); });
 
 var canvas = document.getElementById("ui-topology");
 var ctx = canvas.getContext('2d');
@@ -51,7 +51,7 @@ function Device(icon, name){
     this.width = icon.width/3;
     this.height = icon.height/3;
     this.connectedTo = [];
-    this.connectionIndex = []
+    this.connectionIndex = [];
 }
 
 Device.prototype.contains = function(mx, my){
@@ -130,6 +130,9 @@ function addDevice(event, name){
 }
 
 function removeDevice() {
+    var done = false;
+    var x = null;
+    var y = null;
     if(selected != null){
         if(devices.length > 0){
             var choice = selected.name;
@@ -144,6 +147,20 @@ function removeDevice() {
                     }else if(selected.name.startsWith("Router")){
                         routerCount--;
                     }
+                    for(x of selected.connectionIndex){
+                        connections[x].valid = false;
+                    }
+                        
+                    for(y of selected.connectedTo){
+                        for(z of y.connectedTo){
+                            if(z === selected){
+                            y.connectedTo.splice(y.connectedTo.indexOf(z), 1);
+                            break;
+                            }
+                        }
+
+                    }
+
                     devices.splice(i, 1);
                     deviceCount--;
                     redraw();
@@ -192,8 +209,6 @@ function dragDevice(e){
                 for(y of selected.connectedTo){
                     for(z of y.connectionIndex){
                         if(z == x.index && (selected.connectionIndex.indexOf(z) >= 0)){
-                            console.log(z);
-                            console.log(x.index);
                             x.head.x = ((selected.x) + (selected.width / 2));
                             x.head.y = ((selected.y) + (selected.height / 2));
 
@@ -253,8 +268,8 @@ function deselect(){
     redraw();
 }
 
-function addConnection(sel){
-    if(!isConnecting && sel != null){
+function addConnection(){
+    if(!isConnecting && selected != null){
         isConnecting = true;
     }else {
         document.getElementById("ui-topology").style.cursor = "default";
