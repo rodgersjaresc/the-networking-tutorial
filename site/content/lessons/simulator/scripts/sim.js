@@ -302,9 +302,10 @@ function finishConnection(e){
             connections[connections.length - 1].tail.y = location.y;
             connections[connections.length - 1].valid = true;
             x.connectedTo.push(selected);
-            
             selected.connectedTo.push(x);
-            selected.connectedTo[connections.length - 1].connectionIndex.push(connections[connections.length - 1].index);
+            selected.connectedTo[selected.connectedTo.length - 1].connectionIndex.push(connections[connections.length - 1].index);
+            selected.connectionIndex.push(connections[connections.length - 1].index);
+            
             isConnecting = false;
             document.getElementById("ui-topology").style.cursor = "default";
             redraw();
