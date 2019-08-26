@@ -55,10 +55,8 @@ function Device(icon, name){
 }
 
 Device.prototype.contains = function(mx, my){
-    if(isConnecting)
-    console.log(mx);
-    if(isConnecting)
-    console.log(my);
+    //console.log(mx);
+    //console.log(my);
     return (this.x <= mx) && (this.x + this.width >= mx) &&
        (this.y <= my) && (this.y + this.height >= my);
 }
@@ -192,12 +190,16 @@ function dragDevice(e){
         if(selected.connectedTo.length != 0){
             for(x of connections){
                 for(y of selected.connectedTo){
-                    if(y.connectionIndex.indexOf(x.index) >= 0){
-                        x.head.x = ((selected.x) + (selected.width / 2));
-                        x.head.y = ((selected.y) + (selected.height / 2));
-                        
-                        x.tail.x = ((y.x)) + (y.width / 2);
-                        x.tail.y = ((y.y)) + (y.height / 2);
+                    for(z of y.connectionIndex){
+                        if(z == x.index && (selected.connectionIndex.indexOf(z) >= 0)){
+                            console.log(z);
+                            console.log(x.index);
+                            x.head.x = ((selected.x) + (selected.width / 2));
+                            x.head.y = ((selected.y) + (selected.height / 2));
+
+                            x.tail.x = ((y.x)) + (y.width / 2);
+                            x.tail.y = ((y.y)) + (y.height / 2);
+                        }
                     }
                 }
             }
@@ -264,7 +266,7 @@ function addConnection(sel){
     var conn = new Connection();
     connections.push(conn);
     conn.index = connections.length - 1;
-    selected.connectionIndex.push(conn.index);
+    //selected.connectionIndex.push(conn.index);
     setPathStart(conn);
 }
 
