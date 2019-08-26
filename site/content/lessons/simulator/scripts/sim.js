@@ -51,6 +51,7 @@ function Device(icon, name){
     this.width = icon.width/3;
     this.height = icon.height/3;
     this.connectedTo = [];
+    this.connectionIndex = []
 }
 
 Device.prototype.contains = function(mx, my){
@@ -66,6 +67,7 @@ function Connection(){
     this.head = {x:0, y:0};
     this.tail = {x:0, y:0};
     this.valid = false;
+    this.index = 0;
 }
 
 
@@ -181,12 +183,26 @@ function selectDevice(e){
 function dragDevice(e){
     if(isDragging){
         var location = convertCoordinates(canvas, e.clientX, e.clientY);
+        var x, y, z = 0;
+        redraw();
+        highlight();
         //console.log("mousdwn.");
         selected.x = location.x;
         selected.y = location.y;
+        if(selected.connectedTo.length != 0){
+            for(x of connections){
+                for(y of selected.connectedTo){
+                    if(y.connectionIndex.indexOf(x.index) >= 0){
+                        x.head.x = ((selected.x) + (selected.width / 2));
+                        x.head.y = ((selected.y) + (selected.height / 2));
+                        
+                        x.tail.x = ((y.x)) + (y.width / 2);
+                        x.tail.y = ((y.y)) + (y.height / 2);
+                    }
+                }
+            }
+        }
         //console.log("drag start...");
-        redraw();
-        highlight();
     }
 }
 
@@ -247,6 +263,8 @@ function addConnection(sel){
     document.getElementById("ui-topology").style.cursor = "crosshair";
     var conn = new Connection();
     connections.push(conn);
+    conn.index = connections.length - 1;
+    selected.connectionIndex.push(conn.index);
     setPathStart(conn);
 }
 
@@ -284,7 +302,9 @@ function finishConnection(e){
             connections[connections.length - 1].tail.y = location.y;
             connections[connections.length - 1].valid = true;
             x.connectedTo.push(selected);
+            
             selected.connectedTo.push(x);
+            selected.connectedTo[connections.length - 1].connectionIndex.push(connections[connections.length - 1].index);
             isConnecting = false;
             document.getElementById("ui-topology").style.cursor = "default";
             redraw();
