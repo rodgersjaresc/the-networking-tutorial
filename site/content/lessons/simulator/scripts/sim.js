@@ -8,13 +8,19 @@
 
 var devices = [], connections = [], isDragging = false, selected = null,
     deviceCount = 0, PCCount = 0, switchCount = 0, routerCount = 0,
-    isConnecting = false;
+    isConnecting = false, zoomLevel = 3;
 
 var addButton = document.getElementById("add-button");
 addButton.addEventListener("click", function(){showMenu("add-menu-container");});
 
 var removeButton = document.getElementById("remove-button");
 removeButton.addEventListener("click", removeDevice);
+
+var zoomInButton = document.getElementById("zoom-in-button");
+zoomInButton.addEventListener("click", zoomIn);
+
+var zoomOutButton = document.getElementById("zoom-out-button");
+zoomOutButton.addEventListener("click", zoomOut);
 
 var pcButton = document.getElementById("add-PC"), switchButton = document.getElementById("add-switch"),
     routerButton = document.getElementById("add-router"), connectionButton = document.getElementById("connection-button");
@@ -36,6 +42,14 @@ canvas.addEventListener("mouseup", endDrag);
 //------------GLOBAL VARIABLE DEFINITIONS-----------
 
 
+
+function Connection(){
+    this.head = {x:0, y:0};
+    this.tail = {x:0, y:0};
+    this.valid = false;
+    this.index = 0;
+}
+
 /*----------OBJECT DEFINITIONS----------
 *
 *
@@ -48,8 +62,8 @@ function Device(icon, name){
     this.icon = icon;
     this.x = 0;
     this.y = 0;
-    this.width = icon.width/3;
-    this.height = icon.height/3;
+    this.width = icon.width/zoomLevel;
+    this.height = icon.height/zoomLevel;
     this.connectedTo = [];
     this.connectionIndex = [];
 }
@@ -60,14 +74,6 @@ Device.prototype.contains = function(mx, my){
     return (this.x <= mx) && (this.x + this.width >= mx) &&
        (this.y <= my) && (this.y + this.height >= my);
 }
-
-function Connection(){
-    this.head = {x:0, y:0};
-    this.tail = {x:0, y:0};
-    this.valid = false;
-    this.index = 0;
-}
-
 
 //----------END OBJECT DEFINITIONS----------
 
@@ -99,6 +105,36 @@ function showMenu(id){
 *
 *
 */
+
+function zoomIn() {
+    var x = null;
+    var y = null;
+    if(zoomLevel > 2){
+        zoomLevel--;
+        for(x of devices) {
+            x.width = x.icon.width / zoomLevel;
+            x.height = x.icon.height / zoomLevel;
+        }
+        
+        redraw();
+    }
+    
+}
+
+function zoomOut() {
+    var x = null;
+    var y = null;
+    if(zoomLevel < 6){
+        zoomLevel++;
+        for(x of devices) {
+            x.width = x.icon.width / zoomLevel;
+            x.height = x.icon.height / zoomLevel;
+        }
+        
+        redraw();
+    }
+}
+
 function addDevice(event, name){
     var icon = new Image();
     
